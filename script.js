@@ -4,6 +4,7 @@ console.log(game);
 game.width = 800
 game.height = 800
 const ctx = game.getContext("2d")
+const reader = new FileReader();
 console.log(ctx)
 
 function clear() {
@@ -54,40 +55,44 @@ function rotate_xz({x, y, z}, angle) {
     };
 }
 
+let vs = [];
+let fs = [];
+
+async function loadSceneData() {
+    try {
+        const response = await fetch('./data.json');
+        const data = await response.json();
+
+        // Распределяем данные по переменным
+        vs = data.vs;
+        fs = data.fs;
+
+        console.log('Вершины (vs):', vs);
+        console.log('Грани/связи (fs):', fs);
+        
+        // Пример доступа:
+        console.log('Первая координата первой вершины:', vs[0].x); // -0.25 (number)
+        console.log('Первый индекс первой грани:', fs[0][0]);       // 0 (number)
+    } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+    }
+}
+
 const FPS = 60;
 let dz = 1;
 let angle = 0;
 
-vs = [
-    {x: -0.25, y:  0.25, z:  0.25},
-    {x:  0.25, y:  0.25, z:  0.25},
-    {x:  0.25, y: -0.25, z:  0.25},
-    {x: -0.25, y: -0.25, z:  0.25},
-
-    {x: -0.25, y:  0.25, z: -0.25},
-    {x:  0.25, y:  0.25, z: -0.25},
-    {x:  0.25, y: -0.25, z: -0.25},
-    {x: -0.25, y: -0.25, z: -0.25},
-]
-
-fs = [
-    [0, 1, 2, 3],
-    [4, 5, 6, 7],
-    [0, 4],
-    [1, 5],
-    [2, 6],
-    [3, 7]
-]
 
 function frame() {
     const dt = 1/FPS;
     //dz += 1*dt;
     angle += 2*Math.PI*dt; 
-    clear()
+    clear();
+    loadSceneData();/*
     for (const v of vs) {
         point(screen(project(translate_z(rotate_xz(v, angle), dz))))
     }
-    
+    */
     for (const f of fs) {
         for (let i = 0; i < f.length; ++i) {
             const a = vs[f[i]];

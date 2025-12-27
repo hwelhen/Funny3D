@@ -60,7 +60,7 @@ let fs = [];
 
 async function loadSceneData() {
     try {
-        const response = await fetch('./simpleheart.json');
+        const response = await fetch('./heart.json');
         const data = await response.json();
 
         // Распределяем данные по переменным

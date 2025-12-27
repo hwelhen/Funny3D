@@ -60,7 +60,7 @@ let fs = [];
 
 async function loadSceneData() {
     try {
-        const response = await fetch('./data.json');
+        const response = await fetch('./simpleheart.json');
         const data = await response.json();
 
         // Распределяем данные по переменным
@@ -86,13 +86,13 @@ let angle = 0;
 function frame() {
     const dt = 1/FPS;
     //dz += 1*dt;
-    angle += 2*Math.PI*dt; 
+    angle += Math.PI*dt; 
     clear();
-    loadSceneData();/*
+    loadSceneData();
     for (const v of vs) {
         point(screen(project(translate_z(rotate_xz(v, angle), dz))))
     }
-    */
+
     for (const f of fs) {
         for (let i = 0; i < f.length; ++i) {
             const a = vs[f[i]];

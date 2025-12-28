@@ -1,10 +1,9 @@
-const BACKGROUND = "#2b2b2b"
-const FOREGROUND = "#f57cf7"//"#00ff22"
+const BACKGROUND = "#2b2b2b"//"#faa1ff"//"#9cd4ff"
+const FOREGROUND = "#f57cf7"//"#ff2b2b"//"#f200ff"//"#00ff22"
 console.log(game);
-game.width = 800
-game.height = 800
+game.width = 1000
+game.height = 1000
 const ctx = game.getContext("2d")
-const reader = new FileReader();
 console.log(ctx)
 
 function clear() {
@@ -63,6 +62,13 @@ function scale({x, y, z}, multy) {
     };
 }
 
+function transform({x, y, z}, {dx, dy, dz}) {
+    return {
+        x: x + dx,
+        y: y + dy,
+        z: z + dz
+    };
+}
 let vs = [];
 let fs = [];
 
@@ -74,13 +80,15 @@ async function loadSceneData() {
         // Распределяем данные по переменным
         vs = data.vs;
         fs = data.fs;
-
+        /*
         console.log('Вершины (vs):', vs);
         console.log('Грани/связи (fs):', fs);
-        
+        */
         // Пример доступа:
+        /*
         console.log('Первая координата первой вершины:', vs[0].x); // -0.25 (number)
         console.log('Первый индекс первой грани:', fs[0][0]);       // 0 (number)
+        */
     } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
     }
@@ -90,6 +98,7 @@ const FPS = 60;
 let dz = 1;
 let angle = 0;
 let multy = 1;
+let dv = {dx: 0, dy: 0.4, dz: 0}
 
 
 function frame() {
@@ -101,15 +110,15 @@ function frame() {
     loadSceneData();
     /*
     for (const v of vs) {
-        point(screen(project(translate_z(rotate_xz(scale(v, multy), angle), dz))))
+        point(screen(project(translate_z(rotate_xz(scale(transform(v, dv), multy), angle), dz))))
     }
     */
     for (const f of fs) {
         for (let i = 0; i < f.length; ++i) {
             const a = vs[f[i]];
             const b = vs[f[(i+1)%f.length]];
-            line(screen(project(translate_z(rotate_xz(scale(a, multy), angle), dz))),
-                screen(project(translate_z(rotate_xz(scale(b, multy), angle), dz))))
+            line(screen(project(translate_z(rotate_xz(scale(transform(a, dv), multy), angle), dz))),
+                screen(project(translate_z(rotate_xz(scale(transform(b, dv), multy), angle), dz))))
             
         }
         

@@ -100,15 +100,32 @@ async function loadSceneData() {
 const FPS = 60;
 let dz = 1;
 let angle = 0;
-let multy = 1;
-let dv = {dx: 0, dy: 0.3, dz: 0}
+let multy = 0.7;
+let dv = {dx: 0, dy: 0.2, dz: 0}
+let count = 0;
+let direction = 1;
+let dm = 0.198
 
+function pulse(dt) {
+    if (direction === 1) {
+        multy += dm*dt;
+        if (multy >= 0.8) { // Достигли максимума
+            direction = -1;
+        }
+    }
+    // Плавное изменение масштаба (уменьшение)
+    else {
+        multy -= dm*dt;
+        if (multy <= 0.7) { // Достигли минимума
+            direction = 1;
+        }
+    }
+}
 
 function frame() {
     const dt = 1/FPS;
     //dz += 1*dt;
-    angle += Math.PI*dt; 
-    multy = 0.8;
+    angle += (Math.PI/4)*dt; 
     clear();
     loadSceneData();
     /*
@@ -126,6 +143,7 @@ function frame() {
         }
         
     }
+    pulse(dt);
     setTimeout(frame, 1000/FPS);
 }
 setTimeout(frame, 1000/FPS);

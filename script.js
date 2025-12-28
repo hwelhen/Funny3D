@@ -1,5 +1,5 @@
 const BACKGROUND = "#2b2b2b"
-const FOREGROUND = "#00ff22"
+const FOREGROUND = "#f57cf7"//"#00ff22"
 console.log(game);
 game.width = 800
 game.height = 800
@@ -55,12 +55,20 @@ function rotate_xz({x, y, z}, angle) {
     };
 }
 
+function scale({x, y, z}, multy) {
+    return {
+        x: x*multy,
+        y: y*multy,
+        z: z*multy
+    };
+}
+
 let vs = [];
 let fs = [];
 
 async function loadSceneData() {
     try {
-        const response = await fetch('./heart.json');
+        const response = await fetch('./complexheart.json');
         const data = await response.json();
 
         // Распределяем данные по переменным
@@ -81,24 +89,27 @@ async function loadSceneData() {
 const FPS = 60;
 let dz = 1;
 let angle = 0;
+let multy = 1;
 
 
 function frame() {
     const dt = 1/FPS;
     //dz += 1*dt;
     angle += Math.PI*dt; 
+    multy = 0.7;
     clear();
     loadSceneData();
+    /*
     for (const v of vs) {
-        point(screen(project(translate_z(rotate_xz(v, angle), dz))))
+        point(screen(project(translate_z(rotate_xz(scale(v, multy), angle), dz))))
     }
-
+    */
     for (const f of fs) {
         for (let i = 0; i < f.length; ++i) {
             const a = vs[f[i]];
             const b = vs[f[(i+1)%f.length]];
-            line(screen(project(translate_z(rotate_xz(a, angle), dz))),
-                screen(project(translate_z(rotate_xz(b, angle), dz))))
+            line(screen(project(translate_z(rotate_xz(scale(a, multy), angle), dz))),
+                screen(project(translate_z(rotate_xz(scale(b, multy), angle), dz))))
             
         }
         

@@ -1,14 +1,16 @@
-const BACKGROUND = "#2b2b2b"//"#faa1ff"//"#9cd4ff"
-const FOREGROUND = "#f57cf7"//"#ff2b2b"//"#f200ff"//"#00ff22"
+const BACKGROUND = 'rgba(255, 0, 0, 0)'//"#2b2b2b"//"#faa1ff"//"#9cd4ff"
+const FOREGROUND = "#ff4d6d"//"#f57cf7"//"#ff2b2b"//"#f200ff"//"#00ff22"
 console.log(game);
-game.width = 1000
-game.height = 1000
+game.style.background = 'transparent';
+game.width = 800
+game.height = 800
 const ctx = game.getContext("2d")
 console.log(ctx)
 
 function clear() {
     ctx.fillStyle = BACKGROUND
     ctx.fillRect(0, 0, game.width, game.height)
+    ctx.clearRect(0, 0, game.width, game.height);
 }
 
 function point({x, y}) {
@@ -18,6 +20,7 @@ function point({x, y}) {
 }
 
 function line(p1, p2) {
+    ctx.lineWidth = 3;
     ctx.strokeStyle = FOREGROUND;
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
@@ -98,14 +101,14 @@ const FPS = 60;
 let dz = 1;
 let angle = 0;
 let multy = 1;
-let dv = {dx: 0, dy: 0.4, dz: 0}
+let dv = {dx: 0, dy: 0.3, dz: 0}
 
 
 function frame() {
     const dt = 1/FPS;
     //dz += 1*dt;
     angle += Math.PI*dt; 
-    multy = 0.7;
+    multy = 0.8;
     clear();
     loadSceneData();
     /*

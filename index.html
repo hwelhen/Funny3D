@@ -1,8 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <title>Funny3D</title>
     <link rel="stylesheet" href="index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Подключаем красивый шрифт из Google Fonts -->
+    <link href="fonts.googleapis.com" rel="stylesheet">
+    <style>
+        /* Полная блокировка прокрутки и лишних отступов */
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Фиксируем положение, чтобы исключить скролл на мобильных */
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Отключаем жесты прокрутки */
+            touch-action: none;
+            background: radial-gradient(circle, #ff9a9e 0%, #fecfef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .love-text {
+            /* Используем vw для адаптивности шрифта на телефонах */
+            font-size: clamp(2.5rem, 12vw, 5rem);
+            color: white;
+            line-height: 1.2;
+            margin: 0;
+            text-shadow: 
+                -2px -2px 0 #ff4d6d,  
+                 2px -2px 0 #ff4d6d,
+                -2px  2px 0 #ff4d6d,
+                 2px  2px 0 #ff4d6d,
+                 0 10px 20px rgba(0,0,0,0.15);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -10vh;
+            color: #ff4d6d;
+            pointer-events: none;
+            z-index: 1;
+            will-change: transform;
+            animation: float linear forwards;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <canvas id="game"></canvas>
     <script src="script.js"></script>
+    <div class="container">
+        <h1 class="love-text">Я ТЕБЯ ЛЮБЛЮ МИЛИ</h1>
+    </div>
+
+    <!-- Немного магии: падающие сердечки -->
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤';
+            
+            // Используем расчет с запасом, чтобы не вылезать за края (от 5 до 90%)
+            const startPos = Math.random() * 85 + 5;
+            heart.style.left = startPos + '%';
+            
+            const size = Math.random() * 15 + 15;
+            heart.style.fontSize = size + 'px';
+            
+            const duration = Math.random() * 3 + 4;
+            heart.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Интервал чуть реже, чтобы не перегружать мобильный процессор
+        setInterval(createHeart, 400);
+
+        // Предотвращаем скролл при касании (дополнительная защита)
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+    </script>
+
 </body>
+</html>
+
+
